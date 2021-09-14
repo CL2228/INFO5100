@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>INFO5100 HW3</title>
+
+
+    <!--- D3 IMPORT HERE --->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <!--- D3 IMPORT HERE --->
+</head>
+<body>
+    <p id="p1">
+        Problem 1: </br>
+        <svg id="svg1" width="300" height="300"></svg>
+
+
+        <script id="script1">
+            let svg1 = d3.select("#svg1");
+
+
+            // the text
+            svg1.append("text").text("INFO3300")
+                .attr("x", "150")
+                .attr("y", "150")
+                .attr("text-anchor", "middle")
+                .attr("dominant-baseline", "middle")
+                .style("font-family", "Verdana")
+                .style("font-size", "20px")
+                .style("fill", "black")
+
+            // circle
+            svg1.append("circle")
+                .attr("cx", 150)
+                .attr("cy", 150)
+                .attr("r", 4)
+                .style("fill", "lightpink");
+                // .style("fill", "#ffb6c1");
+
+            // rectangles
+            svg1.append("rect")
+                .attr("x", 50)
+                .attr("y", 50)
+                .attr("width", 50)
+                .attr("height", 50)
+                .attr("fill", "purple")
+                .attr("stroke", "green")
+
+            svg1.append("rect")
+                .attr("x", 200)
+                .attr("y", 50)
+                .attr("width", 50)
+                .attr("height", 25)
+                .attr("fill", "blue")
+                .attr("stroke", "orange")
+
+            svg1.append("rect")
+                .attr("x", 150)
+                .attr("y", 200)
+                .attr("width", 25)
+                .attr("height", 50)
+                .attr("fill", "pink")
+                .attr("stroke", "grey")
+        </script>
+    </p>
+
+
+    <p id="p2">
+        Problem 2: </br>
+
+        <svg id="svg2" width="360" height="360" style="border:1px solid lightgray;"></svg>
+
+
+        <script id="script2">
+
+            function calX(x) {
+                return 20 + x * 32;
+            }
+            function calY(y) {
+                return 340 - y * 32;
+            }
+
+
+            let svg2 = d3.select("#svg2");
+
+            for (i = 20; i <= 340; i += 32) {
+                svg2.append("path")
+                    .style("stroke", "gray")
+                    .style("stroke-width", 1)
+                    .attr("d", "M 20 " + i + " H 340");
+
+                svg2.append("path")
+                    .style("stroke", "gray")
+                    .style("stroke-width", 1)
+                    .attr("d", "M " + i + " 20 V 340");
+            }
+
+            let labels = [0, 5, 10];
+            labels.forEach((d, i) => {
+                svg2.append("text")
+                    .attr("text-anchor", "middle")
+                    .attr("dominant-baseline", "middle")
+                    .attr("x", calX(d))
+                    .attr("y", 350)
+                    .style("font-family", "arial")
+                    .text(d)
+
+                svg2.append("text")
+                    .attr("text-anchor", "end")
+                    .attr("dominant-baseline", "middle")
+                    .attr("y", calY(d))
+                    .attr("x", 18)
+                    .style("font-family", "arial")
+                    .text(d)
+            });
+
+            let datas= [
+                [1.0, 9.0], [1.5, 6.0], [2.5, 4.0], [4.0, 2.0], [5.0, 1.6],
+                [6.0, 2.4], [7.0, 3.0], [8.0, 3.4], [9.0, 3.6]];
+
+            datas.forEach((data, i) =>{
+                svg2.append("circle")
+                    .attr("r", "10px")
+                    .attr("cx", calX(data[0]))
+                    .attr("cy", calY(data[1]))
+                    .attr("fill", "#00447c");
+            });
+        </script>
+    </p>
+
+
+    <ul id="ul1">
+        <li id="li1">
+
+        </li>
+    </ul>
+</body>
+</html>
