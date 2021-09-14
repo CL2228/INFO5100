@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title> class note 0901</title>
+  </head>
+  <body>
+    <script id = "notes1">
+      console.log(typeof(NaN));
+
+      let obj = [{"name": "Linux", number: 12},
+                  {"name": "Python", number: 3}];
+      let jsonobj = JSON.stringify(obj);
+      let back = JSON.parse(jsonobj);
+      console.log(typeof(jsonobj));
+      console.log(typeof(back));
+
+
+      var veg = "pea";
+      let fruit = "mango";
+      const legume = "bean";
+
+      console.log("--start");
+      console.log(veg, fruit, legume);
+      if (fruit == "mango") {
+        fruit = "apple";
+        veg = "leek";
+        // legume = "lentil";
+        console.log("--in if");
+        console.log(veg, fruit, legume);
+      }
+
+      console.log("--out of if");
+      console.log(veg, fruit, legume);
+
+
+      // if statements:
+      let y = 5;
+      if (y === 5) {
+        console.log("equals 5");
+      }
+      else if (y === 6) {
+        console.log("equals 6");
+      }
+      else {
+        console.log("equals not 5 or 6");
+      }
+
+
+      // functions:
+      console.log(favoriteColor);
+      console.log(favoriteColor());
+
+      function favoriteColor() {
+        return "red";
+      }
+      console.log(favoriteColor());
+
+      var favouriteNumer = function() {return 51;}
+      console.log(favouriteNumer());
+      console.log(typeof(favouriteNumer));
+
+      function addOne(n) {
+        return function() {return n + 1;};
+      }
+      console.log(addOne(5)());
+
+      // Arrow Functions!
+      let bestAnimal = () => {console.log("dog")};
+      bestAnimal();
+      let addNumbers = (num1, num2) => {return num1 + num2;};
+      console.log(addNumbers(3,4));
+      let multiplyNums = (num1, num2) =>  num1 * num2;
+      console.log(multiplyNums(3,4));
+
+      let addThtree = number => number + 3;
+      console.log(addThtree(12));
+
+
+      // destructuring
+      let color = [24, 50, 240];
+
+      let [r, g, b] = color;
+      console.log(r, g, b);
+
+      let student = {name: "Lichenghui", class: "INFO5100", age:22};
+      function printStudent({name, age}) {
+        console.log(name, age);
+      }
+      printStudent(student);
+
+
+      let width = 50;
+      let height = 100;
+      // let t = width;
+      // let width = height;
+      // let height = t;
+      console.log(width, height);
+      [height, width] = [width, height];
+      console.log(width, height);
+
+
+      // looping
+      let list = ["red", "green", "blue", "yellow"];
+      for (let i = 0; i < list.length; i++) {
+        console.log(list[i]);
+      }
+
+      for (let element of list) {
+        console.log(element);
+      }
+
+      list.forEach((element) => {
+        //do stuff with element;
+        console.log(element + 1);
+        element = element + 2;
+      }) ;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </script>
+
+
+  </body>
+</html>

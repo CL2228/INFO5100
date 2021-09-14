@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>INFO5100 HW2</title>
+</head>
+<body>
+    <h3>Name: Chenghui Li;      NetID: cl2228</h3>
+
+    </br></br>
+
+    <p id="p1">
+        Problem 1:<br>
+        <svg height="360" width="360" style="border: 0px solid black;">
+
+            <!--- Grid !--->
+            // horizontal
+            <path style="stroke:#898989; stroke-width: 1" d="M 20 20 H 340"></path>
+            <path style="stroke:#898989; stroke-width: 1" d="M 20 52 H 340"></path>
+            <path style="stroke:#898989; stroke-width: 1" d="M 20 84 H 340"></path>
+            <path style="stroke:#898989; stroke-width: 1" d="M 20 116 H 340"></path>
+            <path style="stroke:#898989; stroke-width: 1" d="M 20 148 H 340"></path>
+            <path style="stroke:#898989; stroke-width: 1" d="M 20 180 H 340"></path>
+            <path style="stroke:#898989; stroke-width: 1" d="M 20 212 H 340"></path>
+            <path style="stroke:#898989; stroke-width: 1" d="M 20 244 H 340"></path>
+            <path style="stroke:#898989; stroke-width: 1" d="M 20 276 H 340"></path>
+            <path style="stroke:#898989; stroke-width: 1" d="M 20 308 H 340"></path>
+            <path style="stroke:#898989; stroke-width: 1" d="M 20 340 H 340"></path>
+
+            // vertical
+            <path style="stroke:#898989; stroke-width: 1" d="M 20 20 V 340"></path>
+            <path style="stroke:#898989; stroke-width: 1" d="M 52 20 V 340"></path>
+            <path style="stroke:#898989; stroke-width: 1" d="M 84 20 V 340"></path>
+            <path style="stroke:#898989; stroke-width: 1" d="M 116 20 V 340"></path>
+            <path style="stroke:#898989; stroke-width: 1" d="M 148 20 V 340"></path>
+            <path style="stroke:#898989; stroke-width: 1" d="M 180 20 V 340"></path>
+            <path style="stroke:#898989; stroke-width: 1" d="M 212 20 V 340"></path>
+            <path style="stroke:#898989; stroke-width: 1" d="M 244 20 V 340"></path>
+            <path style="stroke:#898989; stroke-width: 1" d="M 276 20 V 340"></path>
+            <path style="stroke:#898989; stroke-width: 1" d="M 308 20 V 340"></path>
+            <path style="stroke:#898989; stroke-width: 1" d="M 340 20 V 340"></path>
+
+
+            // circles
+            // x_pixel = 20 + x * 32
+            // y_pixel = 340 - y * 32
+            <circle r="7" cx="52" cy="52" style="fill:#045EAE"></circle>
+            <circle r="7" cx="68" cy="148" style="fill:#045EAE"></circle>
+            <circle r="7" cx="100" cy="212" style="fill:#045EAE"></circle>
+            <circle r="7" cx="148" cy="276" style="fill:#045EAE"></circle>
+            <circle r="7" cx="180" cy="288.8" style="fill:#045EAE"></circle>
+            <circle r="7" cx="212" cy="263.2" style="fill:#045EAE"></circle>
+            <circle r="7" cx="244" cy="244" style="fill:#045EAE"></circle>
+            <circle r="7" cx="276" cy="231.2" style="fill:#045EAE"></circle>
+            <circle r="7" cx="308" cy="224.8" style="fill:#045EAE"></circle>
+
+            // texts
+            <text text-anchor="middle" dominant-baseline="middle" x="20" y="350">0</text>
+            <text text-anchor="middle" dominant-baseline="middle" x="180" y="350">5</text>
+            <text text-anchor="middle" dominant-baseline="middle" x="340" y="350">10</text>
+            <text text-anchor="middle" dominant-baseline="middle" x="10" y="20">10</text>
+            <text text-anchor="middle" dominant-baseline="middle" x="10" y="180">5</text>
+            <text text-anchor="middle" dominant-baseline="middle" x="10" y="340">0</text>
+
+
+        </svg>
+        <script>
+
+            // functions used to get the coordinates in pixels.
+            function calX(x) {
+                return 20 + x * 32;
+            }
+            function calY(y) {
+                return 340 - y * 32;
+            }
+        </script>
+    </p>
+    </br>
+
+    <p id="p2">
+        Problem 2:</br>
+        The marks of each row of data is the single dark-blue circle.</br>
+        The two visual channels are the horizontal position and the vertical position of the circle.</br>
+    </p>
+    </br>
+
+    <p id="p3">
+        Problem 3:</br>
+        <svg width="300" height="300" >
+            <line x1="50" y1="0" x2="50" y2="300" stroke-width="5" stroke="black"/>
+            <line x1="0" y1="250" x2="300" y2="250" stroke-width="5" stroke="black"/>
+            <line x1="0" y1="100" x2="50" y2="100" stroke-width="15" stroke="black"/>
+            <line x1="270" y1="250" x2="270" y2="300" stroke-width="10" stroke="black"/>
+            <line x1="50" y1="50" x2="300" y2="50" stroke-width="5" stroke="black"/>
+            <line x1="200" y1="0" x2="200" y2="50" stroke-width="10" stroke="black"/>
+            <line x1="200" y1="25" x2="300" y2="25" stroke-width="5" stroke="black"/>
+
+            <rect x="0" y="0" width="47.5" height="92.5" fill="yellow"/>
+            <rect x="52.5" y="0" width="142.5" height="47.5" fill="white"/>
+            <rect x="205" y="0" width="95" height="22.5" fill="white"/>
+            <rect x="205" y="27.5" width="95" height="20" fill="blue"/>
+            <rect x="0" y="107.5" width="47.5" height="140" fill="white"/>
+            <rect x="0" y="252.5" width="47.5" height="47.5" fill="blue"/>
+            <rect x="52.5" y="52.5" width="247.5" height="195" fill="red"/>
+            <rect x="52.5" y="252.5" width="212.5" height="47.5" fill="white"/>
+            <rect x="275" y="252.5" width="47.5" height="47.5" fill="yellow"/>
+        </svg>
+        </br>
+        Sorry, I have to admit that this is a pretty ugly product, thank god I didn't choose Master of Art.</br>
+    </p>
+
+
+
+
+
+</body>
+</html>
