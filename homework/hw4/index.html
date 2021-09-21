@@ -166,8 +166,16 @@
 
 
 
-        }, (error) => {console.log(error);})
+        }, (error) => {console.log(error);});
+    </script>
 
+
+    <script id="s2">
+
+        // load the dataset...
+        d3.csv("./NCAA_shots.csv").then((ballData) => {
+            console.log(ballData);
+        }, (error) => {console.log(error)});
 
     </script>
 
