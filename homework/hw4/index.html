@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>INFO5100 HW4</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+    <h3>Name: Chenghui Li; NetID: cl2228</h3>
+
+    <!--    div for problem 1 -->
+    <div id="div1">
+        <h4>Problem 1</h4></br>
+
+    </div>
+
+
+    <!--    div for problem 2 -->
+    <div id="div2">
+        <h4>Problem 2</h4></br>
+
+    </div>
+
+
+    <script id="s1">
+
+        // load the dataset....
+        d3.json("./diamonds.json").then((diamondData) => {
+            console.log(diamondData);
+
+            // SVG 1 for this problem-------------------------------------
+            const div1 = d3.select("div#div1");
+            const svg1 = div1.append("svg")
+                .attr("id", "svg1")
+                .attr("height", 400)
+                .attr("width", 400)
+                // .style("background", "#F5F5FF");
+            const svg1Height = svg1.attr("height");
+            const svg1Width = svg1.attr("width");
+            const svg1Margin = {top:5, bottom: 5, left: 5, right: 5};
+            const svg1Corner = {top:svg1Margin.top, bottom: svg1Height - svg1Margin.bottom,
+                left: svg1Margin.left, right: svg1Width - svg1Margin.right};
+
+            // scale functions for price and carat-------------------------------
+            const priceExtent = d3.extent(diamondData, d => d['price'] );
+            const priceScale = d3.scaleLinear().domain([0, 19000]).range([svg1Corner.bottom, svg1Corner.top]);
+
+            const caratExtent = d3.extent(diamondData, d => d['carat']);
+            const caratScale = d3.scaleLinear().domain([0, 3]).range([svg1Corner.left, svg1Corner.right]);
+
+            // draw lines and circles-------------------------------------------
+            for (i = 0; i < 19; i++) {
+                svg1.append("line")
+                    .attr("x1", Math.floor(svg1Corner.left))
+                    .attr("y1", Math.floor(priceScale(i * 1000)))
+                    .attr("x2", Math.floor(svg1Corner.right))
+                    .attr("y2", Math.floor(priceScale(i * 1000)))
+                    .attr("stroke-width", 1)
+                    .attr("stroke", "#A8A8A8")
+            }
+            for (i = 0; i < 3; i++) {
+                svg1.append("line")
+                    .attr("x1", Math.floor(caratScale(i)))
+                    .attr("y1", Math.floor(svg1Corner.bottom))
+                    .attr("x2", Math.floor(caratScale(i)))
+                    .attr("y2", Math.floor(svg1Corner.top))
+                    .attr("stroke-width", 1)
+                    .attr("stroke", "#A8A8A8");
+            }
+            diamondData.forEach((d, i) => {
+                svg1.append("circle")
+                    .attr("cx", Math.floor(caratScale(d['carat'])))
+                    .attr("cy", Math.floor(priceScale(d['price'])))
+                    .attr("r", 3)
+                    .attr("opacity", 0.4)
+                    .attr("fill", "#205B82")
+            })
+
+
+            // the second SVG --------------------------------------------------
+            const svg2 = div1.append("svg")
+                .attr("id", "svg2")
+                .attr("height", 400)
+                .attr("width", 400);
+                // .style("background", "#F5F5FF");
+            const svg2Height = svg1.attr("height");
+            const svg2Width = svg1.attr("width");
+            const svg2Margin = {top:5, bottom: 5, left: 5, right: 5};
+            const svg2Corner = {top:svg2Margin.top, bottom: svg2Height - svg2Margin.bottom,
+                left: svg2Margin.left, right: svg2Width - svg2Margin.right};
+
+            const colorExtent = d3.extent(diamondData, d => d['color_rating'])
+            const colorScale = d3.scaleLinear().domain([0, 8]).range([svg1Corner.left, svg1Corner.right]);
+
+
+            for (i = 0; i < 19; i++) {
+                svg2.append("line")
+                    .attr("x1", Math.floor(svg1Corner.left))
+                    .attr("y1", Math.floor(priceScale(i * 1000)))
+                    .attr("x2", Math.floor(svg1Corner.right))
+                    .attr("y2", Math.floor(priceScale(i * 1000)))
+                    .attr("stroke-width", 1)
+                    .attr("stroke", "#A8A8A8")
+            }
+            for (i = 0; i < 8; i++) {
+                svg2.append("line")
+                    .attr("x1", Math.floor(colorScale(i)))
+                    .attr("y1", Math.floor(svg1Corner.bottom))
+                    .attr("x2", Math.floor(colorScale(i)))
+                    .attr("y2", Math.floor(svg1Corner.top))
+                    .attr("stroke-width", 1)
+                    .attr("stroke", "#A8A8A8");
+            }
+
+            diamondData.forEach((d, i) => {
+                svg2.append("circle")
+                    .attr("cx", Math.floor(colorScale(d['color_rating']) + (Math.random() * 10 - 5)))
+                    .attr("cy", Math.floor(priceScale(d['price']) + (Math.random() * 10 - 5)))
+                    .attr("r", 3)
+                    .attr("opacity", 0.3)
+                    .attr("fill", "#11642E")
+            })
+
+
+            // the third SVG --------------------------------------------------
+            const svg3 = div1.append("svg")
+                .attr("id", "svg3")
+                .attr("height", 400)
+                .attr("width", 400);
+
+            const perExtent = d3.extent(diamondData, d => d['price'] / d['carat']);
+            const perScale = d3.scaleLinear().domain([0, 16000]).range([svg1Corner.bottom, svg1Corner.top]);
+
+            for (i = 1; i < 8; i++) {
+                svg3.append("line")
+                    .attr("x1", Math.floor(colorScale(i)))
+                    .attr("y1", Math.floor(svg1Corner.bottom))
+                    .attr("x2", Math.floor(colorScale(i)))
+                    .attr("y2", Math.floor(svg1Corner.top))
+                    .attr("stroke-width", 1)
+                    .attr("stroke", "#A8A8A8");
+            }
+            for (i = 0; i < 16; i++) {``
+                svg3.append("line")
+                    .attr("x1", Math.floor(svg1Corner.left))
+                    .attr("y1", Math.floor(perScale(i * 1000)))
+                    .attr("x2", Math.floor(svg1Corner.right))
+                    .attr("y2", Math.floor(perScale(i * 1000)))
+                    .attr("stroke-width", 1)
+                    .attr("stroke", "#A8A8A8")
+            }
+
+            diamondData.forEach((d, i) => {
+                svg3.append("circle")
+                    .attr("cx", Math.floor(colorScale(d['color_rating']) + (Math.random() * 10 - 5)))
+                    .attr("cy", Math.floor(perScale(d['price'] / d['carat']) + (Math.random() * 10 - 5)))
+                    .attr("r", 3)
+                    .attr("opacity", 0.3)
+                    .attr("fill", "#780103")
+            })
+            console.log(perExtent);
+
+            div1.append("p").text("TODO: explain the abnormal observation.");
+
+
+
+
+
+        }, (error) => {console.log(error);})
+
+
+    </script>
+
+
+</body>
+</html>
