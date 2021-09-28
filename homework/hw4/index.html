@@ -26,7 +26,6 @@
 
         // load the dataset....
         d3.json("./diamonds.json").then((diamondData) => {
-            console.log(diamondData);
 
             // SVG 1 for this problem-------------------------------------
             const div1 = d3.select("div#div1");
@@ -43,10 +42,15 @@
 
             // scale functions for price and carat-------------------------------
             const priceExtent = d3.extent(diamondData, d => d['price'] );
-            const priceScale = d3.scaleLinear().domain([0, 19000]).range([svg1Corner.bottom, svg1Corner.top]);
+            const priceScale = d3.scaleLinear().domain([0, priceExtent[1]]).range([svg1Corner.bottom, svg1Corner.top]);
 
             const caratExtent = d3.extent(diamondData, d => d['carat']);
-            const caratScale = d3.scaleLinear().domain([0, 3]).range([svg1Corner.left, svg1Corner.right]);
+            const caratScale = d3.scaleLinear().domain([0, caratExtent[1]]).range([svg1Corner.left, svg1Corner.right]);
+
+            console.log("princeExtent:" + priceExtent)
+            console.log("caratExtent:" + caratExtent)
+
+
 
             // draw lines and circles-------------------------------------------
             for (i = 0; i < 19; i++) {
@@ -114,8 +118,8 @@
 
             diamondData.forEach((d, i) => {
                 svg2.append("circle")
-                    .attr("cx", Math.floor(colorScale(d['color_rating']) + (Math.random() * 10 - 5)))
-                    .attr("cy", Math.floor(priceScale(d['price']) + (Math.random() * 10 - 5)))
+                    .attr("cx", Math.floor(colorScale(d['color_rating']) + (Math.random() * 10 - 5) / 2))
+                    .attr("cy", Math.floor(priceScale(d['price']) + (Math.random() * 10 - 5) / 2))
                     .attr("r", 3)
                     .attr("opacity", 0.3)
                     .attr("fill", "#11642E")
@@ -129,7 +133,9 @@
                 .attr("width", 400);
 
             const perExtent = d3.extent(diamondData, d => d['price'] / d['carat']);
-            const perScale = d3.scaleLinear().domain([0, 16000]).range([svg1Corner.bottom, svg1Corner.top]);
+            const perScale = d3.scaleLinear().domain([0, perExtent[1]]).range([svg1Corner.bottom, svg1Corner.top]);
+
+            console.log("perExtent:" + perExtent)
 
             for (i = 1; i < 8; i++) {
                 svg3.append("line")
@@ -152,15 +158,17 @@
 
             diamondData.forEach((d, i) => {
                 svg3.append("circle")
-                    .attr("cx", Math.floor(colorScale(d['color_rating']) + (Math.random() * 10 - 5)))
-                    .attr("cy", Math.floor(perScale(d['price'] / d['carat']) + (Math.random() * 10 - 5)))
+                    .attr("cx", Math.floor(colorScale(d['color_rating']) + (Math.random() * 10 - 5) / 2))
+                    .attr("cy", Math.floor(perScale(d['price'] / d['carat']) + (Math.random() * 10 - 5) / 2))
                     .attr("r", 3)
                     .attr("opacity", 0.3)
                     .attr("fill", "#780103")
             })
             console.log(perExtent);
 
-            div1.append("p").text("TODO: explain the abnormal observation.");
+            div1.append("p").text("The chart does not show the distribution of the prices of different color levels, \n" +
+                "we might find out the difference by the price distribution graph of different color levels which shows the mean and variance of the data."
+            +"When we look at the highest PerPrice of each level, we can find out that the number for 1 is the largest, and the number for 7 is the smallest, which makes sense.");
 
 
 
@@ -172,10 +180,65 @@
 
     <script id="s2">
 
+
+
+
         // load the dataset...
-        d3.csv("./NCAA_shots.csv").then((ballData) => {
+        d3.csv("./NCAA_shots.csv", d3.autoType).then((ballData) => {
+
+            console.log("---------------------------New Problem-------------------")
+
+            // console.log(ballData)
+
+
+            const div2 = d3.select("div#div2");
+            const svg4 = div2.append("svg")
+                .attr("id", "svg1")
+                .attr("height", 500)
+                .attr("width", 500)
+                .style("background", "black");
+            const svg4Height = svg4.attr("height");
+            const svg4Width = svg4.attr("width");
+            // const svg4Margin = {top:5, bottom: 5, left: 5, right: 5};
+            // const svg4Corner = {top:svg4Margin.top, bottom: svg4Height - svg4Margin.bottom,
+            //     left: svg4Margin.left, right: svg4Width - svg4Margin.right};
+
+
+            ballData.forEach((d,i) => {
+                d['height'] = d['height'] * 5;
+                d['x'] = d['x'] * 5;
+                d['y'] = d['y'] * 5;
+                d['width'] = d['width'] * 5;
+            })
+
             console.log(ballData);
+
+
+            const attemptExtent = d3.extent(ballData, (d) => d['log_attempt'] );
+            const attemptScale = d3.scaleLinear().domain(attemptExtent).range([0,1]);
+
+            function getColor(attempt) {
+                return d3.interpolateViridis(attemptScale(attempt));
+            }
+
+            ballData.forEach((d, i) => {
+                svg4.append("rect")
+                    .attr("x", d['x'])
+                    .attr("y", d['y'])
+                    .attr("width", d['width'])
+                    .attr("height", d['height'])
+                    .style("fill", getColor(d['log_attempt']));
+            })
+
+
+            div2.append("p").text("When I used the 'attempt' rather than 'log_attempt', the chart is mostly dark purple because the data distribution is " +
+                "exponential, makes scaleLinear not appropriate. Before we use log_attempt, we need to make sure the raw data distribution is exponential, otherwise" +
+                "the result will be too bright in this case.");
+
         }, (error) => {console.log(error)});
+
+
+
 
     </script>
 
