@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>INFO5100 Project 1</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+    <h3>Title Here</h3>
+
+    <div id="div1">
+        <!-- main SVG  -->
+        <svg id="svg1" height="600" width="1000" style="background: white">
+
+        </svg>
+
+    </div>
+
+
+    <script id="s1">
+        // this is the main script for the whole project
+
+        // chart initialization----------------------------------------------------------------
+
+        const svg = d3.select("svg#svg1");
+        const svgWidth = svg.attr("width");
+        const svgHeight = svg.attr("height");
+        const svgMargin = {top:15, right:75, left: 60, bottom: 60};     // save space for axes
+        const chartWidth = svgWidth - svgMargin.left - svgMargin.right;     // chart area
+        const chartHeight = svgHeight - svgMargin.top - svgMargin.bottom;
+
+        // use two g tags, "frame" and "chart" for the frame work and data, respectively
+        let frame = svg.append("g").attr("id", "frame");
+        let chart = svg.append("g").attr("id", "chart")     // transform the data so that they show in the chart area
+                        .attr("transform", `translate(${svgMargin.left}, ${svgMargin.top})`);
+
+
+        // load the data----------------------------------------------------------------------
+        d3.csv("./books.csv", d3.autoType).then((data) => {
+
+            data.forEach((d, i) => {
+                d['Year'] = String(d['Year']);
+            })
+
+            console.log(data);
+
+            // extents
+            const ratingExtent = d3.extent(data, d => d['User Rating']);
+            const reviewExtent = d3.extent(data, d => d['Reviews']);
+            const yearExtent = d3.extent(data, d => d['Year']);
+            const genreExtent = d3.extent(data, d => d['Genre']);
+
+            // scales
+            const ratingScale = d3.scaleLinear().domain(ratingExtent).range([chartHeight, 0]);  // rating axis on the left side
+            const reviewScale = d3.scaleLinear().domain(reviewExtent).range([chartHeight, 0]);  // reviews axis on the right
+            const yearScale = d3.scaleLinear().domain(yearExtent).range([0, chartWidth]);       // years as X axis
+            const genreScale = d3.scaleOrdinal(d3.schemeCategory10);            // use different colors for fiction/non-ficiton
+
+
+            console.log(ratingExtent);      //  [3.3, 4.9]
+            console.log(reviewExtent);      //  [37, 87841]
+            console.log(yearExtent);        //  [2009, 2019]
+            console.log(genreExtent);       //  ['Fiction', 'Non Fiction']
+
+
+            // Draw axes---------------------------------------------------------------------
+            let axisRating = d3.axisLeft(ratingScale)           // rating axis
+            frame.append("g")
+                .attr("class", "rating axis")
+                .attr("transform", `translate(${svgMargin.left - 10}, ${svgMargin.top})`)
+                .call(axisRating);
+
+
+            let axisReviews = d3.axisRight(reviewScale)         // review axis
+            frame.append("g")
+                .attr("class", "review axis")
+                .attr("transform", `translate(${svgMargin.left + chartWidth + 10}, ${svgMargin.top})`)
+                .call(axisReviews);
+
+
+            let axisYear = d3.axisBottom(yearScale)
+                            .tickFormat(d3.format("~f"));
+            frame.append("g")
+                .attr("class", "year axis")
+                .attr("transform", `translate(${svgMargin.left}, ${svgMargin.top + chartHeight + 5})`)
+                .call(axisYear);
+
+            // Labels for axes--------------------------------------------------------------
+            svg.append("text")          // Year label
+                .text("Year")
+                .attr("x", svgMargin.left + chartWidth / 2)
+                .attr("y", chartHeight + svgMargin.top + 40)
+                .attr("text-anchor", "middle");
+
+            svg.append("text")          // Rating label
+                .text("Rating")
+                .attr("transform", `rotate(-90 ${svgMargin.left - 45} ${chartHeight / 2 + svgMargin.top})`)
+                .attr("x", svgMargin.left - 45)
+                .attr("y", chartHeight / 2 + svgMargin.top)
+                .attr("text-anchor", "middle")
+
+            svg.append("text")          // Review label
+                .text("Reviews")
+                .attr("transform", `rotate(90 ${svgMargin.left + chartWidth + 60} ${chartHeight / 2 + svgMargin.top})`)
+                .attr("x", svgMargin.left + chartWidth + 60)
+                .attr("y", chartHeight / 2 + svgMargin.top)
+                .attr("text-anchor", "middle")
+
+
+
+            // Append data points here-----------------------------------------------------------------
+
+
+
+
+        }, (error) => {console.log(error)});
+
+
+
+
+    </script>
+
+
+</body>
+</html>

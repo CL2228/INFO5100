@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>INFO5100 Project 1</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+
+        .gridlines line {
+            stroke: lightgray;
+        }
+        .gridlines .domain {
+            stroke: none;
+        }
+
+    </style>
+</head>
+<body>
+    <h3>INFO5100 Project 1</h3>
+
+    <div id="div1">
+        <!-- main SVG  -->
+        <svg id="svg1" height="700" width="1000" style="background: white">
+        </svg>
+
+        <svg id="svg2" height="700" width="1000" style="background: white">
+        </svg>
+
+    </div>
+
+
+    <script id="s1">
+        // this is the main script for the whole project
+
+        // chart initialization----------------------------------------------------------------
+
+        const svg = d3.select("svg#svg1");
+        const svgWidth = svg.attr("width");
+        const svgHeight = svg.attr("height");
+        const svgMargin = {top:100, right: 20, left: 80, bottom: 60};     // save space for axes
+        const chartWidth = svgWidth - svgMargin.left - svgMargin.right;     // chart area
+        const chartHeight = svgHeight - svgMargin.top - svgMargin.bottom;
+
+        // use two g tags, "frame" and "chart" for the frame work and data, respectively
+        let frame = svg.append("g").attr("id", "frame");
+        let chart = svg.append("g").attr("id", "chart")     // transform the data so that they show in the chart area
+                        .attr("transform", `translate(${svgMargin.left}, ${svgMargin.top})`);
+
+
+        // TODO: Adjustments: a new svg added, all variables for the original svg are not changed
+        const svg2 = d3.select("svg#svg2");
+        let frame2 = svg2.append("g").attr("id", "frame");
+        let chart2 = svg2.append("g").attr("id", "chart")     // transform the data so that they show in the chart area
+            .attr("transform", `translate(${svgMargin.left}, ${svgMargin.top})`);
+
+
+        // load the data----------------------------------------------------------------------
+        d3.csv("./books.csv", d3.autoType).then((data) => {
+
+            data.forEach((d, i) => {
+                d['Year'] = String(d['Year']);
+            })
+
+            console.log(data);
+
+            // extents
+            const ratingExtent = d3.extent(data, d => d['User Rating']);
+            const reviewExtent = d3.extent(data, d => d['Reviews']);
+            const yearExtent = d3.extent(data, d => d['Year']);
+            const genreExtent = d3.extent(data, d => d['Genre']);
+
+            // scales
+            const ratingScale = d3.scaleLinear().domain(ratingExtent).range([chartHeight, 0]);  // rating axis on the left side
+            const reviewScale = d3.scaleLinear().domain(reviewExtent).range([chartHeight, 0]);  // reviews axis on the right
+            const yearScale = d3.scaleLinear().domain(yearExtent).range([0, chartWidth]);       // years as X axis
+            const genreScale = d3.scaleOrdinal(d3.schemeCategory10);            // use different colors for fiction/non-ficiton
+
+
+            console.log(ratingExtent);      //  [3.3, 4.9]
+            console.log(reviewExtent);      //  [37, 87841]
+            console.log(yearExtent);        //  [2009, 2019]
+            console.log(genreExtent);       //  ['Fiction', 'Non Fiction']
+
+
+            // Draw axes---------------------------------------------------------------------
+            let axisRating = d3.axisLeft(ratingScale)           // rating axis
+            frame.append("g")
+                .attr("class", "rating axis")
+                .attr("transform", `translate(${svgMargin.left - 10}, ${svgMargin.top})`)
+                .call(axisRating);
+
+
+            let axisYear = d3.axisBottom(yearScale)
+                            .tickFormat(d3.format("~f"));
+            frame.append("g")
+                .attr("class", "year axis")
+                .attr("transform", `translate(${svgMargin.left}, ${svgMargin.top + chartHeight + 5})`)
+                .call(axisYear);
+
+            // TODO: (already done) axes for svg2
+            frame2.append("g")
+                .attr("class", "year axis")
+                .attr("transform", `translate(${svgMargin.left}, ${svgMargin.top + chartHeight + 5})`)
+                .call(axisYear);
+
+            let axisReviews = d3.axisLeft(reviewScale)         // review axis
+            frame2.append("g")
+                .attr("class", "review axis")
+                .attr("transform", `translate(${svgMargin.left - 10}, ${svgMargin.top})`)
+                .call(axisReviews);
+
+            // Gridlines-------------------------------------------------------------------
+            let gridRating = d3.axisLeft(ratingScale)
+                                .tickSize(-chartWidth - 10)
+                                .tickFormat("")
+            frame.append("g")
+                .attr("class", "rating gridlines")
+                .attr("transform", `translate(${svgMargin.left - 10}, ${svgMargin.top})`)
+                .call(gridRating);
+
+
+            let gridYear = d3.axisBottom(yearScale)
+                                .tickSize(-chartHeight - 10)
+                                .tickFormat("")
+            frame.append("g")
+                .attr("class", "year gridlines")
+                .attr("transform", `translate(${svgMargin.left}, ${svgMargin.top + chartHeight + 5})`)
+                .call(gridYear);
+            frame2.append("g")
+                .attr("class", "year gridlines")
+                .attr("transform", `translate(${svgMargin.left}, ${svgMargin.top + chartHeight + 5})`)
+                .call(gridYear);
+
+
+            let gridReviews = d3.axisLeft(reviewScale)
+                                .tickSize(-chartWidth - 10)
+                                .tickFormat("")
+            frame2.append("g")
+                .attr("class", "reviews gridlines")
+                .attr("transform", `translate(${svgMargin.left - 10}, ${svgMargin.top})`)
+                .call(gridReviews);
+
+            // Labels for axes--------------------------------------------------------------
+            svg.append("text")          // Year label
+                .text("Year")
+                .attr("x", svgMargin.left + chartWidth / 2)
+                .attr("y", chartHeight + svgMargin.top + 40)
+                .attr("text-anchor", "middle");
+
+            svg.append("text")          // Rating label
+                .text("Rating")
+                .attr("transform", `rotate(-90 ${svgMargin.left - 45} ${chartHeight / 2 + svgMargin.top})`)
+                .attr("x", svgMargin.left - 45)
+                .attr("y", chartHeight / 2 + svgMargin.top)
+                .attr("text-anchor", "middle")
+
+            svg2.append("text")          // Review label
+                .text("Reviews")
+                .attr("transform", `rotate(-90 ${svgMargin.left - 60} ${chartHeight / 2 + svgMargin.top})`)
+                .attr("x", svgMargin.left - 45)
+                .attr("y", chartHeight / 2 + svgMargin.top)
+                .attr("text-anchor", "middle")
+            svg2.append("text")          // Year label
+                .text("Year")
+                .attr("x", svgMargin.left + chartWidth / 2)
+                .attr("y", chartHeight + svgMargin.top + 40)
+                .attr("text-anchor", "middle");
+
+
+
+            // Append data points here-----------------------------------------------------------------
+            //Symbols and legends
+            svg.append('circle')   //ratings symbol
+               .attr('cx',  700)
+               .attr('cy',  10)
+               .attr('r', 3)
+               .attr('opacity', 0.4)
+               .style('fill', );
+            svg.append("text")          // ratings label
+                .text("fictions")
+                .attr("x", 710)
+                .attr("y", 10)
+                .attr("dominant-baseline", "middle")
+
+            svg.append('circle')   //reviews symbol
+                .attr('cx',  700)
+                .attr('cy',  30)
+                .attr('r', 3)
+                .attr('opacity', 0.4)
+                .style('fill', );
+            svg.append("text")          // reviews label
+                .text("non-fic")
+                .attr("x", 710)
+                .attr("y", 30)
+                .attr("dominant-baseline", "middle")
+
+            svg.append('rect')
+               .attr("width", 85)
+               .attr("height", 35)
+               .attr("x", 690)
+               .attr("y", 0)
+               .style("stroke", "black")
+               .style('fill', 'none');
+
+            data.forEach((d, i) => {
+                svg.append('circle')   //ratings over the years
+                   .attr('cx', svgMargin.left + Math.floor(yearScale(d['Year'])+(Math.random()*10-5)))
+                   .attr('cy', Math.floor(ratingScale(d['User Rating'])+(Math.random()*15-5)) + svgMargin.top)
+                   .attr('r', 5)
+                   .attr('opacity', 0.4)
+                   .attr('index', i)
+                   .style('fill', genreScale(d['Genre']));
+
+
+                svg2.append('rect')   //reviews over the years
+                   .attr('x', svgMargin.left + Math.floor(yearScale(d['Year'])+(Math.random()*10-5)))
+                   .attr('y', Math.floor(reviewScale(d['Reviews'])+(Math.random()*15-5)) + svgMargin.top -5)
+                   .attr("width", 10)
+                   .attr("height", 10)
+                   .attr('opacity', 0.4)
+                   .attr('index', i)
+                   .style('fill', genreScale(d['Genre']));
+
+                 });
+
+            // for( i=0; i<11; i++){
+            //     svg.append("rect")
+            //        .attr("width", 10)
+            //        .attr("height", 10)
+            //        .attr("x", svgMargin.left + i * chartWidth / 10)
+            //        .attr("y", chartHeight - ratingScale)
+            //        .style("stroke", "black")
+            //        .style("fill", "orange")
+            //        //.attr("text-anchor", "middle");
+            //      }
+
+
+
+        }, (error) => {console.log(error)});
+
+
+
+
+    </script>
+
+
+</body>
+</html>
