@@ -2,9 +2,129 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>INFO5100 HW6</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+
+    <style>
+        .grids .domain {
+            stroke: none;
+        }
+        .grids line {
+            stroke: lightgray;
+        }
+    </style>
 </head>
 <body>
+    <h3>Name: Chenghui Li; NetID: cl2228</h3>
+
+    <p>Problem 1:</p>
+    <svg id="svg1" height="400" width="800" style="background:white;"></svg>
+
+    <script id="s1">
+        // svg configuration---------------------------------------------------
+        const svg1 = d3.select("svg#svg1")
+        const widthSvg1 = svg1.attr("width")
+        const heightSvg1 = svg1.attr("height")
+        const marginSvg1 = {left:55, bottom:45, top:5, right:5};
+        const chartWidth = widthSvg1 - marginSvg1.left - marginSvg1.right;
+        const charHeight = heightSvg1 - marginSvg1.top - marginSvg1.bottom;
+
+        console.log(widthSvg1)
+        console.log(heightSvg1)
+
+
+        // two g tags for axis and data----------
+        let frame = svg1.append("g").attr("id", "frame")
+
+        let chart = svg1.append("g").attr("id", "chart")
+            .attr("transform", `translate(${marginSvg1.left},${marginSvg1.top})`);
+
+
+        const timeParser = d3.timeParse('%m-%d-%Y');
+
+
+        // the main process function----------------------------------------
+        const process = async function() {
+
+
+            const wholeData = await d3.json("./erie_fishing.json", d3.autoType);
+
+            console.log(wholeData);
+            console.log(wholeData['timeseries']);
+
+
+            const dateExtent = d3.extent([timeParser(wholeData['earliest_date']), timeParser(wholeData['latest_date'])]);
+            const dateScale = d3.scaleTime().domain(dateExtent).range([0, chartWidth]);
+            const caughtExtent = d3.extent([wholeData['min_value'], wholeData['max_value']])
+            const caughtScale = d3.scaleLinear().domain(caughtExtent).range([charHeight, 0]);
+            const speciousScale = d3.scaleOrdinal(d3.schemeCategory10);
+
+
+            // Draw axis and grids-------------------------------------
+            let axisLeft = d3.axisLeft(caughtScale);
+            let gridLeft = d3.axisLeft(caughtScale)
+                                .tickSize(-chartWidth - 10)
+                                .tickFormat("");
+            frame.append("g")
+                .attr("class", "y axis")
+                .attr("transform", `translate(${marginSvg1.left - 15},${marginSvg1.top})`)
+                .call(axisLeft);
+            frame.append("g")
+                .attr("class", "y grids")
+                .attr("transform", `translate(${marginSvg1.left - 15},${marginSvg1.top})`)
+                .call(gridLeft);
+
+            let axisBottom = d3.axisBottom(dateScale)
+            let gridBottom = d3.axisBottom(dateScale)
+                                .tickSize(-charHeight - 10)
+                                .tickFormat("");
+            frame.append("g")
+                .attr("class", "x axis")
+                .attr("transform", `translate(${marginSvg1.left},${marginSvg1.top + charHeight + 10})`)
+                .call(axisBottom);
+            frame.append("g")
+                .attr("class", "x grids")
+                .attr("transform", `translate(${marginSvg1.left},${marginSvg1.top + charHeight + 10})`)
+                .call(gridBottom);
+
+
+            // g tags for each specious-----------------------------------------------
+            var lineGen = d3.line()
+                            .x( d => dateScale(timeParser(d['date'])))
+                            .y( d => caughtScale(d['total_caught']));
+
+            let speciousGTag = chart.selectAll("g")
+                .data(wholeData['timeseries'])
+                // .data(wholeData['timeseries'], d => d['values'])
+                .join("g")
+                .attr("class", d => d['species'])
+                .style("stroke", d => speciousScale(d['species']));
+
+            // add a path to this g tag
+            speciousGTag.append("path")
+                .attr("class", "line")
+                .attr("fill", "none")
+                .attr("stroke-width", 2)
+                .attr("d", d => lineGen(d['values']));
+
+            // use data join to append circles
+            speciousGTag.selectAll("circle")
+                .data(d => d['values'])
+                .join("circle")
+                .attr("class", "datapoint")
+                .attr("cx", d => dateScale( timeParser(d['date']) ) )
+                .attr("cy", d => caughtScale( d['total_caught'] ) )
+                .attr("r", 2)
+                .style("fill", d => speciousScale(d['species']) );
+
+        }
+
+
+        // call the main process function
+        process();
+
+    </script>
+
 
 </body>
 </html>
